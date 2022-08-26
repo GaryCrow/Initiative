@@ -5,9 +5,9 @@ import os
 root = Tk()
 root.title("Encounter Tracker")
 root.option_add('*Font','30')
-root.geometry("600x600")
+root.geometry("650x600")
 root.minsize(400, 490)
-root.maxsize(780,800)
+root.maxsize(780,650)
 global FONT
 FONT = "Georgia"
 global order
@@ -60,7 +60,7 @@ TBSIZE = 12
 lst = Listbox(root, selectmode=MULTIPLE, font =(FONT, TBSIZE),width=20)
 root.wm_attributes('-transparentcolor','purple')
 lst.insert(END, *order)
-lst.grid(column=0,row=0,sticky ="ns",padx=0,pady=5,rowspan=17,columnspan=1)
+lst.grid(column=0,row=0,sticky ="ns",padx=5,pady=5,rowspan=17,columnspan=1)
 #Check for the Saves folder
 if(os.path.exists('Saves')):
     os.chdir('Saves')
@@ -74,26 +74,27 @@ listHP.grid(column=1,row=0,sticky ="ns",padx=5,pady=5,rowspan=17)
 def Heal():
     if(len(HPMOD.get()) !=0 and listHP.curselection()):
         selection = listHP.curselection()
-       #print(selection)
+       #print("You selected:"+str(selection))
         sel = listHP.get(selection[0]).split('|')[1].lstrip().split('[')[0]
-       #print(sel)
+        #print("Name is:"+sel)
         
         
     
-        for i in range(len(name)):
-            if(sel == name[i]):
-                #print(i)
-                HP[i]= str(int(HP[i]) + int(HPMOD.get()))
-                #print(HP[i])
+        for i in range(0,len(storage),6):
+            if(sel == storage[i]):
+                
+                storage[i+2]= str(int(storage[i+2]) + int(HPMOD.get()))
+                
                 tracker.clear()
-                for i in range(len(name)):
-                    tracker.append(team[i]+'|'+name[i]+'['+HP[i]+'/'+HPMAX[i]+']('+AC[i]+')')
+                for i in range(0,len(storage),6):
+                    
+                    tracker.append(storage[+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
                 #print(tracker)
-                storage[i*5+3] = HP[i]
+                
                 tracker.sort()
                 listHP.delete(0,END)
                 listHP.insert(END,*tracker)
-        
+    save()        
 HEALBTNX =625
 HealFrame = Frame(root)
 HealFrame.grid(column=2,row=0,sticky ="nw",padx=5,pady=2)
@@ -109,21 +110,21 @@ def Damage():
         
         
     
-        for i in range(len(name)):
-            if(sel == name[i]):
+        for i in range(0,len(storage),6):
+            if(sel == storage[i]):
                 
-                HP[i]= str(int(HP[i]) - int(HPMOD.get()))
+                storage[i+2]= str(int(storage[i+2]) - int(HPMOD.get()))
                 
                 tracker.clear()
-                for i in range(len(name)):
+                for i in range(0,len(storage),6):
                     
-                    tracker.append(team[i]+'|'+name[i]+'['+HP[i]+'/'+HPMAX[i]+']('+AC[i]+')')
+                    tracker.append(storage[+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
                 #print(tracker)
-                storage[i*5+3] = HP[i]
+                
                 tracker.sort()
                 listHP.delete(0,END)
                 listHP.insert(END,*tracker)
-
+    save()
 HPMOD = Entry(HealFrame,width=5)
 HPMOD.pack(fill='x')
 
@@ -147,65 +148,28 @@ def clicked():
         tracker.clear()
         storage.clear()
         '''
+        
+        
+        i = (len(storage)/6)
+        i=int(i*6)
+        storage.append(nameTxt.get())
+        #storage.append(initiative[i])
         if(len(rollTxt.get()) <2):
-            name.append(nameTxt.get())
-            initiative.append('0'+rollTxt.get())
-            HP.append(HPTXT.get())
-            HPMAX.append(HPTXT.get())
-            team.append(TeamTXT.get())
-            if len(ACTXT.get()) !=0:
-                AC.append(ACTXT.get())
-            else:
-                AC.append(' ')
-            i = len(name)-1
-            order.append(initiative[i]+'-'+name[i])
-            tracker.append(team[i]+'|'+name[i]+'['+HP[i]+'/'+HPMAX[i]+']('+AC[i]+')')
-            storage.append(name[i])
-            storage.append(initiative[i])
-            storage.append(HP[i])
-            storage.append(HPMAX[i])
-            storage.append(team[i])
-            storage.append(AC[i])
+            storage.append('0'+rollTxt.get())
         elif len(rollTxt.get()) == 3:
-            name.append(nameTxt.get())
-            initiative.append(str(int(rollTxt.get())/10))
-            HP.append(HPTXT.get())
-            HPMAX.append(HPTXT.get())
-            team.append(TeamTXT.get())
-            if len(ACTXT.get()) !=0:
-                AC.append(ACTXT.get())
-            else:
-                AC.append(' ')
-            
-            i = len(name)-1
-            order.append(initiative[i]+'-'+name[i])
-            tracker.append(team[i]+'|'+name[i]+'['+HP[i]+'/'+HPMAX[i]+']('+AC[i]+')')
-            storage.append(name[i])
-            storage.append(initiative[i])
-            storage.append(HP[i])
-            storage.append(HPMAX[i])
-            storage.append(team[i])
-            storage.append(AC[i])
+            storage.append(str(int(rollTxt.get())/10))  
         else:
-            name.append(nameTxt.get())
-            initiative.append(rollTxt.get())
-            HP.append(HPTXT.get())
-            HPMAX.append(HPTXT.get())
-            team.append(TeamTXT.get())
-            if len(ACTXT.get()) !=0:
-                AC.append(ACTXT.get())
-            else:
-                AC.append(' ')
-            
-            i = len(name)-1
-            order.append(initiative[i]+'-'+name[i])
-            tracker.append(team[i]+'|'+name[i]+'['+HP[i]+'/'+HPMAX[i]+']('+AC[i]+')')
-            storage.append(name[i])
-            storage.append(initiative[i])
-            storage.append(HP[i])
-            storage.append(HPMAX[i])
-            storage.append(team[i])
-            storage.append(AC[i])
+            storage.append(rollTxt.get())
+
+        storage.append(HPTXT.get())
+        storage.append(HPTXT.get())
+        storage.append(TeamTXT.get())
+        if len(ACTXT.get()) !=0:
+            storage.append(ACTXT.get())  
+        else:
+            storage.append(' ')
+        order.append(storage[i+1]+'-'+storage[i])
+        tracker.append(storage[+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
         rollTxt.delete(0,END)
         nameTxt.delete(0,END)
         HPTXT.delete(0,END)
@@ -217,7 +181,7 @@ def clicked():
         lst.delete(0,END)
         lst.insert(END,*order)
         nameTxt.focus_set()
-       # #print(order)
+    save()
 def rotate():
     order.sort(key = order[0].__eq__)
     ##print(order)
@@ -225,24 +189,57 @@ def rotate():
     lst.insert(END,*order)
 # Delete Button & Function
 def delete():
-    selection = lst.curselection()
-    for i in selection[::-1]:
-        lst.delete(i)
-        del order[i]
+    if lst.curselection():
+        selection = lst.curselection()
+        for i in selection[::-1]:
+            TempName = lst.get(i).split("-",1)[1]
+            lst.delete(i)
+            del order[i]
+            for i, listbox_entry in enumerate(listHP.get(0, END)):
+                if TempName in listbox_entry:
+                    listHP.delete(i)
+                    del tracker[i]
+            print(storage)
+            for i in range (len(storage)-6):
+            
+                if TempName == storage[i]:
+                    for j in range(6):
+                        print(storage[int(i)],i,j,i+j)
+                        del storage[int(i)]
+            print(storage)        
+    elif listHP.curselection():
+        selection = listHP.curselection()
+        for i in selection[::-1]:
+            TempName = listHP.get(selection[0]).split('|')[1].lstrip().split('[')[0]
+            listHP.delete(i)
+            del tracker[i]
+            for i, listbox_entry in enumerate(lst.get(0, END)):
+                if TempName in listbox_entry:
+                    lst.delete(i)
+                    del order[i]
+            print(storage)
+            for i in range (len(storage)-6):
+            
+                if TempName == storage[i]:
+                    for j in range(6):
+                        print(storage[int(i)],i,j,i+j)
+                        del storage[int(i)]
+            print(storage)      
+'''   
 def HPdelete():
     selection = listHP.curselection()
     for i in selection[::-1]:
         listHP.delete(i)
         del order[i]
-              
+ '''             
 
 btnDelete = Button(root, text = "Delete Selection", command = delete, font=(FONT))
 btnDelete.grid(column=0,row=17,sticky ="nw",padx=5,pady=2)
-btnHPDelete = Button(root, text = "Delete Selection", command = HPdelete, font=(FONT))
-btnHPDelete.grid(column=1,row=17,sticky ="nw",padx=5,pady=2)
+#btnHPDelete = Button(root, text = "Delete Selection", command = HPdelete, font=(FONT))
+#btnHPDelete.grid(column=1,row=17,sticky ="nw",padx=5,pady=2)
 #Textboxes for name and roll
 InfoFrame = Frame(root)
-InfoFrame.grid(column=2,row=15,sticky ="se",padx=5,pady=2,rowspan=5)
+InfoFrame.grid(column=2,row=13,sticky ="se",padx=5,pady=2,rowspan=7)
 
 nameVar = StringVar()
 namelabel = Label(InfoFrame, textvariable=nameVar, font=(FONT))
@@ -291,7 +288,7 @@ ACTXT.pack()
 
 #Begin Save Area
 saveFrame = Frame(root)
-saveFrame.grid(column=0,row=18,sticky ="nw",padx=5,pady=2)
+saveFrame.grid(column=2,row=10,sticky ="nw",padx=5,pady=2)
 savetxt = Entry(saveFrame, font=("Georgia"))
 savetxt.pack(fill='y')
 '''
@@ -351,31 +348,26 @@ def load():
     HPMAX.clear()
     team.clear()
     storage.clear()
-    for i in selection[::-1]:
+    for j in selection[::-1]:
         #print(loadtxt.get(i))
-        input = open(loadtxt.get(i)+".txt", "r")
+        loader=loadtxt.get(j)
+        input = open(loadtxt.get(j)+".txt", "r")
         temp = input.read().splitlines()
        
         #print(len(temp))
         for i in range(0,len(temp),6):
            #print(i)
-            name.append(temp[i])
+            storage.append(temp[i])
             #print(temp[i])
-            initiative.append(temp[i+1])
-            HP.append(temp[i+2])
-            HPMAX.append(temp[i+3])
-            team.append(temp[i+4])
-            AC.append(temp[i+5])
-        #print(team)  
-        for i in range(len(name)):
-            storage.append(name[i])
-            storage.append(initiative[i])
-            storage.append(HP[i])
-            storage.append(HPMAX[i])
-            storage.append(team[i])
-            storage.append(AC[i])
-            order.append(initiative[i]+'-'+name[i])
-            tracker.append(team[i]+'|'+name[i]+'['+HP[i]+'/'+HPMAX[i]+']('+AC[i]+')')
+            storage.append(temp[i+1])
+            storage.append(temp[i+2])
+            storage.append(temp[i+3])
+            storage.append(temp[i+4])
+            storage.append(temp[i+5])  
+            for j in range(6):
+                print(storage[j])
+            order.append(storage[i+1]+'-'+storage[i])
+            tracker.append(storage[+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
         order.sort(reverse = True)
         trackertemp = tracker
         trackertemp.sort()
@@ -384,6 +376,8 @@ def load():
         lst.insert(END,*order)
         listHP.delete(0,END)
         listHP.insert(END,*trackertemp)
+        savetxt.delete(0,END)
+        savetxt.insert(END,loader)
 print(order)
 btnLoad = Button(InfoFrame, text = "Load", fg = "green", command = load, font=(FONT))
 btnLoad.pack()
