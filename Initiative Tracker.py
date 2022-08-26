@@ -4,10 +4,10 @@ import glob
 import os
 root = Tk()
 root.title("Encounter Tracker")
-root.option_add('*Font','50')
+root.option_add('*Font','30')
 root.geometry("600x600")
-root.minsize(690, 690)
-root.maxsize(1200,800)
+root.minsize(400, 490)
+root.maxsize(780,800)
 global FONT
 FONT = "Georgia"
 global order
@@ -29,6 +29,20 @@ HP = []
 team = []
 initiative = []
 AC =[]
+'''
+root.grid_rowconfigure(0, weight=1)
+root.grid_columnconfigure(0, weight=1)
+root.grid_rowconfigure(1, weight=1)
+root.grid_columnconfigure(1, weight=1)
+root.grid_rowconfigure(2, weight=1)
+root.grid_columnconfigure(2, weight=1)
+'''
+for i in range(20):
+    root.grid_rowconfigure(i, weight=1)
+root.grid_rowconfigure(0, weight=5)
+root.grid_columnconfigure(0, weight=2)
+root.grid_columnconfigure(1, weight=2)
+root.grid_columnconfigure(2, weight=1)
 #Start making background
 root.wm_attributes('-transparentcolor','purple')
 importList = StringVar(value=order)
@@ -42,19 +56,20 @@ background.place(x=0,y=0)
 TBWIDTH = 34
 TBSIZE = 12
 #End Background
-lst = Listbox(root, selectmode=MULTIPLE, font =(FONT, TBSIZE),height = 22, width = int(TBWIDTH*0.65))
+
+lst = Listbox(root, selectmode=MULTIPLE, font =(FONT, TBSIZE),width=20)
 root.wm_attributes('-transparentcolor','purple')
 lst.insert(END, *order)
-lst.place(x=10,y=10,anchor = NW)
+lst.grid(column=0,row=0,sticky ="ns",padx=0,pady=5,rowspan=17,columnspan=1)
 #Check for the Saves folder
 if(os.path.exists('Saves')):
     os.chdir('Saves')
 else:
     os.mkdir('Saves')
 #Button to add people
-listHP = Listbox(root, font =(FONT, TBSIZE),height = 22, width = TBWIDTH)
+listHP = Listbox(root, font =(FONT, TBSIZE),width=30)
 root.wm_attributes('-transparentcolor','purple')
-listHP.place(x=260, y=10, anchor = NW)
+listHP.grid(column=1,row=0,sticky ="ns",padx=5,pady=5,rowspan=17)
 #Damage/Heal Buttons
 def Heal():
     if(len(HPMOD.get()) !=0 and listHP.curselection()):
@@ -79,9 +94,11 @@ def Heal():
                 listHP.delete(0,END)
                 listHP.insert(END,*tracker)
         
-HEALBTNX =625       
-btnHeal = Button(root, text = "Heal", fg = "green", command = Heal, font=(FONT))
-btnHeal.place(x=HEALBTNX,y=70, anchor=NW)
+HEALBTNX =625
+HealFrame = Frame(root)
+HealFrame.grid(column=2,row=0,sticky ="nw",padx=5,pady=2)
+btnHeal = Button(HealFrame, text = "Heal", fg = "green", command = Heal, font=(FONT))
+btnHeal.pack(fill='x')
 
 def Damage():
     if(len(HPMOD.get()) !=0 and listHP.curselection()):
@@ -107,11 +124,13 @@ def Damage():
                 listHP.delete(0,END)
                 listHP.insert(END,*tracker)
 
-btnDMG = Button(root, text = "Damage", fg = "Red", command = Damage, font=(FONT))
-btnDMG.place(x=HEALBTNX,y=110, anchor=NW)
+HPMOD = Entry(HealFrame,width=5)
+HPMOD.pack(fill='x')
 
-HPMOD = Entry(root,width=5)
-HPMOD.place(x=HEALBTNX, y=40,anchor = NW)
+
+btnDMG = Button(HealFrame, text = "Damage", fg = "Red", command = Damage, font=(FONT))
+btnDMG.pack()
+
 
 #Enter key for easy entering
 
@@ -218,61 +237,69 @@ def HPdelete():
               
 
 btnDelete = Button(root, text = "Delete Selection", command = delete, font=(FONT))
-btnDelete.place(anchor =NW, x=10, y=435)
+btnDelete.grid(column=0,row=17,sticky ="nw",padx=5,pady=2)
 btnHPDelete = Button(root, text = "Delete Selection", command = HPdelete, font=(FONT))
-btnHPDelete.place(anchor =NW, x=260, y=435)
+btnHPDelete.grid(column=1,row=17,sticky ="nw",padx=5,pady=2)
 #Textboxes for name and roll
+InfoFrame = Frame(root)
+InfoFrame.grid(column=2,row=15,sticky ="se",padx=5,pady=2,rowspan=5)
+
 nameVar = StringVar()
-namelabel = Label(root, textvariable=nameVar, font=(FONT))
+namelabel = Label(InfoFrame, textvariable=nameVar, font=(FONT))
 nameVar.set("Character Name")
-namelabel.place(rely=1.0,x=-10, y=-230, relx=1.0,anchor = SE)
-nameTxt = Entry(root, width=20, font=("Georgia"))
-nameTxt.place(rely=1.0,x=-10, y=-210, relx=1.0,anchor = SE)
+namelabel.pack()
+nameTxt = Entry(InfoFrame, width=20, font=("Georgia"))
+nameTxt.pack()
 
 #Handle Roll input
 
 rollVar = StringVar()
-rolllabel = Label(root, textvariable=rollVar, font=(FONT))
+rolllabel = Label(InfoFrame, textvariable=rollVar, font=(FONT))
 rollVar.set("Initiative")
-rolllabel.place(rely=1.0,x=-10, y=-186, relx=1.0,anchor = SE)
+rolllabel.pack()
 
 #my_canvas.create_text(400,250, text = "Initiative", font=("Georgia"), anchor=SE)
 
-rollTxt = Entry(root,width=5)
-rollTxt.place(rely=1.0,x=-10, y=-165, relx=1.0,anchor = SE)
+rollTxt = Entry(InfoFrame,width=10)
+rollTxt.pack()
 #Health
-HPTXT = Entry(root,width=5)
-HPTXT.place(rely=1.0,x=-10, y=-120, relx=1.0,anchor = SE)
 HPVar = StringVar()
-HPlabel = Label(root, textvariable=HPVar, font=(FONT))
+HPlabel = Label(InfoFrame, textvariable=HPVar, font=(FONT))
 HPVar.set("Max Health")
-HPlabel.place(rely=1.0,x=-10, y=-142, relx=1.0,anchor = SE)
+HPlabel.pack()
+HPTXT = Entry(InfoFrame,width=10)
+HPTXT.pack()
+
 #Allegiance
-TeamTXT = Entry(root,width=10)
-TeamTXT.place(rely=1.0,x=-10, y=-80, relx=1.0,anchor = SE)
 TeamVar = StringVar()
-Teamlabel = Label(root, textvariable=TeamVar, font=(FONT))
+Teamlabel = Label(InfoFrame, textvariable=TeamVar, font=(FONT))
 TeamVar.set("Allegiance")
-Teamlabel.place(rely=1.0,x=-10, y=-100, relx=1.0,anchor = SE)
+Teamlabel.pack()
+TeamTXT = Entry(InfoFrame,width=10)
+TeamTXT.pack()
+
 #AC
-ACTXT = Entry(root,width=10)
-ACTXT.place(rely=1.0,x=-120, y=-80, relx=1.0,anchor = SE)
 ACVar = StringVar()
-AClabel = Label(root, textvariable=ACVar, font=(FONT))
+AClabel = Label(InfoFrame, textvariable=ACVar, font=(FONT))
 ACVar.set("Optional: AC")
-AClabel.place(rely=1.0,x=-120, y=-100, relx=1.0,anchor = SE)
+AClabel.pack()
+ACTXT = Entry(InfoFrame,width=10)
+ACTXT.pack()
+
 
 
 
 #Begin Save Area
-savetxt = Entry(root, width = 25, font=("Georgia"))
-savetxt.place(rely=1.0, x=10,y=-125, anchor =SW)
-
+saveFrame = Frame(root)
+saveFrame.grid(column=0,row=18,sticky ="nw",padx=5,pady=2)
+savetxt = Entry(saveFrame, font=("Georgia"))
+savetxt.pack(fill='y')
+'''
 saveVar = StringVar()
 savelabel = Label(root, textvariable=saveVar, font=(FONT))
 saveVar.set("Save As")
-savelabel.place(rely=1.0, x=10, y=-150, anchor = SW)
-
+savelabel.grid(column=0,row=9,sticky ="nw",padx=5,pady=2)
+'''
 def save():
     if(len(savetxt.get()) !=0):
         if(os.path.exists(savetxt.get()+'.txt')):
@@ -297,8 +324,8 @@ def save():
         loadtxt.delete(0,END)
         loadtxt.insert(0,*my_files)
 
-btnSave = Button(root, text = "Save", fg = "green", command = save, font=(FONT))
-btnSave.place(rely=1.0, x=265,y=-120, anchor=SW)
+btnSave = Button(saveFrame, text = "Save Scenario", fg = "green", command = save, font=(FONT))
+btnSave.pack(fill='x')
 
 #Begin Load Area
 
@@ -309,14 +336,10 @@ my_files = glob.glob('*.txt')
 my_files = [os.path.splitext(x)[0] for x in my_files]
 loadtxt = Listbox(root, width = 25, height =5, font=(FONT))
 
-loadtxt.place(rely=1.0, x=10,y=-10, anchor =SW)
+loadtxt.place(rely=1.0, x=5,y=-5, anchor =SW)
 loadtxt.insert(0,*my_files)
-    
-scrollbar = Scrollbar(loadtxt, orient="vertical")
-scrollbar.place(rely=1.0, x=255, y = -80)
-scrollbar.config(command=loadtxt.yview)
-#scrollbar.pack(side="right", fill="y")
-loadtxt.config(yscrollcommand=scrollbar.set)
+
+
 
 def load():
     selection = loadtxt.curselection()
@@ -362,15 +385,15 @@ def load():
         listHP.delete(0,END)
         listHP.insert(END,*trackertemp)
 print(order)
-btnLoad = Button(root, text = "Load", fg = "green", command = load, font=(FONT))
-btnLoad.place(rely=1.0, x=265,y=-10, anchor=SW)
+btnLoad = Button(InfoFrame, text = "Load", fg = "green", command = load, font=(FONT))
+btnLoad.pack()
 
-btn = Button(root, text = "Insert" ,
+btn = Button(InfoFrame, text = "Insert" ,
              fg = "red", command=clicked, font=("Georgia"))
-btn.place(rely=1.0,x=-10, y=-45, relx=1.0,anchor = SE)
+btn.pack()
 
-btnRo = Button(root, text = "Next Turn", fg = "blue", command = rotate, font=(FONT))
-btnRo.place(rely=1.0,x=-10, y=-10, relx=1.0,anchor = SE)
+btnRo = Button(InfoFrame, text = "Next Turn", fg = "blue", command = rotate, font=(FONT))
+btnRo.pack()
 # Set Button Grid
 #print(order)
 
