@@ -88,7 +88,7 @@ def Heal():
                 tracker.clear()
                 for i in range(0,len(storage),6):
                     
-                    tracker.append(storage[+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
+                    tracker.append(storage[i+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
                 #print(tracker)
                 
                 tracker.sort()
@@ -118,7 +118,7 @@ def Damage():
                 tracker.clear()
                 for i in range(0,len(storage),6):
                     
-                    tracker.append(storage[+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
+                    tracker.append(storage[i+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
                 #print(tracker)
                 
                 tracker.sort()
@@ -169,7 +169,7 @@ def clicked():
         else:
             storage.append(' ')
         order.append(storage[i+1]+'-'+storage[i])
-        tracker.append(storage[+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
+        tracker.append(storage[i+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
         rollTxt.delete(0,END)
         nameTxt.delete(0,END)
         HPTXT.delete(0,END)
@@ -367,7 +367,7 @@ def load():
             for j in range(6):
                 print(storage[j])
             order.append(storage[i+1]+'-'+storage[i])
-            tracker.append(storage[+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
+            tracker.append(storage[i+4]+'|'+storage[i]+'['+storage[i+2]+'/'+storage[i+3]+']('+storage[i+5]+')')
         order.sort(reverse = True)
         trackertemp = tracker
         trackertemp.sort()
@@ -380,7 +380,7 @@ def load():
         savetxt.insert(END,loader)
 print(order)
 btnLoad = Button(InfoFrame, text = "Load", fg = "green", command = load, font=(FONT))
-btnLoad.pack()
+btnLoad.pack(side=LEFT)
 
 btn = Button(InfoFrame, text = "Insert" ,
              fg = "red", command=clicked, font=("Georgia"))
